@@ -1,3 +1,4 @@
+/test-abbrev
 /test-chmtime
 /test-ctype
 /test-config
@@ -15,6 +16,7 @@
 /test-index-version
 /test-lazy-init-name-hash
 /test-line-buffer
+/test-list-objects
 /test-match-trees
 /test-mergesort
 /test-mktemp
