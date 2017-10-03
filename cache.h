@@ -605,9 +605,28 @@ extern int do_read_index(struct index_state *istate, const char *path,
 extern int read_index_from(struct index_state *, const char *path);
 extern int is_index_unborn(struct index_state *);
 extern int read_index_unmerged(struct index_state *);
+
+/* Flags for `write_locked_index()`. */
 #define COMMIT_LOCK		(1 << 0)
 #define CLOSE_LOCK		(1 << 1)
+
+/*
+ * Write the index while holding an already-taken lock. The flags must
+ * contain precisely one of `COMMIT_LOCK` and `CLOSE_LOCK`.
+ *
+ * Unless a split index is in use, write the index into the lock-file,
+ * then commit or close it, as indicated by `flags`.
+ *
+ * With a split index, write the shared index to a temporary file,
+ * adjust its permissions and rename it into place, then write the
+ * split index to the lockfile. If the temporary file for the shared
+ * index cannot be created, fall back to the normal case.
+ *
+ * With `COMMIT_LOCK`, the lock is always committed or rolled back.
+ * With `CLOSE_LOCK`, the lock will be neither committed nor rolled back.
+ */
 extern int write_locked_index(struct index_state *, struct lock_file *lock, unsigned flags);
+
 extern int discard_index(struct index_state *);
 extern void move_index_extensions(struct index_state *dst, struct index_state *src);
 extern int unmerged_index(const struct index_state *);
